@@ -25,9 +25,9 @@ module ALU_Test(
     );
     
     reg clk;
-    reg [7:0] in_1;
-    reg [7:0] in_2;
-    wire [7:0] out; 
+    reg [31:0] in_1;
+    reg [31:0] in_2;
+    wire [31:0] out; 
     wire carry; 
     reg [7:0] select;
    
@@ -40,20 +40,21 @@ module ALU_Test(
    
    initial begin
         select <= 8'b0;
-        in_1 <= 8'd6;
-        in_2 <= 8'd1;
-         #10;
+        in_1 <= 32'd6;
+        in_2 <= 32'd1;
+        #1;
    end
    
     initial begin
         clk = 0;
-        forever #5 clk = ~clk;
+        #5;
+        forever #1 clk = ~clk;
     end
     
         // Monitoring block to display values
     initial begin
         $monitor("Time=%0t, select=%h, in_1=%d, in_2=%d, out=%d, carry=%b",
                  $time, select, in_1, in_2, out, carry);
-        #50 $finish;
+        #5000 $finish;
     end
 endmodule

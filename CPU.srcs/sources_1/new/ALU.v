@@ -53,19 +53,44 @@ module Adder8Bit (a,b,cin,s,cout);
     
 endmodule
 
+module Adder32Bit (a,b,cin,s,cout);
+    input wire [31:0] a,b;
+    input wire cin;
+    
+    output wire [31:0] s;
+    output wire cout;
+    
+    wire [2:0] inner_couts;
+    
+	Adder8Bit adder8_0 (.a(a[7:0]), .b(b[7:0]), .cin(cin), .s(s[7:0]), .cout(inner_couts[0]));
+	Adder8Bit adder8_1 (.a(a[15:8]), .b(b[15:8]), .cin(inner_couts[0]), .s(s[15:8]), .cout(inner_couts[1]));
+	Adder8Bit adder8_2 (.a(a[23:16]), .b(b[23:16]), .cin(inner_couts[1]), .s(s[23:16]), .cout(inner_couts[2]));
+	Adder8Bit adder8_3 (.a(a[31:24]), .b(b[31:24]), .cin(inner_couts[2]), .s(s[31:24]), .cout(cout));
+endmodule
+
 
 module ALU(
     input wire [7:0] select,
-    input wire [7:0] IN_1,
-    input wire [7:0] IN_2,
-    output reg [7:0] OUT,
+    input wire [31:0] IN_1,
+    input wire [31:0] IN_2,
+    output reg [31:0] OUT,
     output reg carry
 );
 
+wire [31:0] sum;
+wire adder_carry;
+Adder32Bit adder32(IN_1, IN_2, 1'b0, sum, adder_carry);
+
 always @ (IN_1 or IN_2 or select) begin
         case (select)
-            8'b00000000 : OUT <= IN_1 + IN_2;
-            default: OUT <= 8'b0;
+            8'b00000000 : begin
+                OUT <= sum; 
+                carry <= adder_carry;
+            end
+            default: begin
+                OUT <= 32'b0;
+                carry <= 1'b0;
+            end
         endcase
 end
 
