@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ALU_Add_Test(
+module ALU_2s_Test(
        
     );
     
@@ -34,15 +34,14 @@ module ALU_Add_Test(
    ALU alu(select, in_1, in_2, out, carry);
    
    always @ (posedge clk) begin
-        in_1 <= in_1 +1;
-        in_2 <= in_2 - 2;
+        in_1 <= in_1+1;
    end
    
    initial begin
-        select <= 8'b0;
-        in_1 <= 32'hFFFFFFFE;
-        in_2 <= 32'd2;
-         #1;
+        select <= 8'b1;
+        in_1 <= 32'hFF123;
+        in_2 <= 32'b0;
+        #1;
    end
    
     initial begin
@@ -50,7 +49,6 @@ module ALU_Add_Test(
         forever #1 clk = ~clk;
     end
     
-        // Monitoring block to display values
     initial begin
         $monitor("Time=%0t, select=%h, in_1=%d, in_2=%d, out=%d, carry=%b",
                  $time, select, in_1, in_2, out, carry);

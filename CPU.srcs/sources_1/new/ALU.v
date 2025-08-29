@@ -69,6 +69,13 @@ module Adder32Bit (a,b,cin,s,cout);
 endmodule
 
 
+module TwosComplement (data_in, out);
+    input wire [31:0] data_in;
+    output wire [31:0] out;
+
+    assign out = ~data_in + 1;
+endmodule
+
 module ALU(
     input wire [7:0] select,
     input wire [31:0] IN_1,
@@ -77,15 +84,35 @@ module ALU(
     output reg carry
 );
 
+initial begin
+    OUT <= 0;
+    carry <= 0;
+end
+   
+
 wire [31:0] sum;
 wire adder_carry;
 Adder32Bit adder32(IN_1, IN_2, 1'b0, sum, adder_carry);
 
+wire [31:0] twos_complement1;
+TwosComplement twosComplementerIn1(IN_1, twos_complement1);
+
+wire [31:0] sub;
+wire subber_carry;
+Adder32Bit subber32(IN_1, ~IN_2, 1'b1, sub, subber_carry);
+
 always @ (IN_1 or IN_2 or select) begin
         case (select)
-            8'b00000000 : begin
+            8'b00000000 : begin // add
                 OUT <= sum; 
                 carry <= adder_carry;
+            end
+            8'b00000001 : begin // negate
+                OUT <= twos_complement1;
+            end
+            8'b00000010 : begin // sub
+                OUT <= sub;
+                carry <= subber_carry;
             end
             default: begin
                 OUT <= 32'b0;
