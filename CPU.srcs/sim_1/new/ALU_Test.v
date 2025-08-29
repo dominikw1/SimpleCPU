@@ -40,14 +40,13 @@ module ALU_Test(
    
    initial begin
         select <= 8'b0;
-        in_1 <= 32'd6;
-        in_2 <= 32'd1;
-        #1;
+        in_1 <= 32'hFFFFFFFE;
+        in_2 <= 32'd2;
+         #1;
    end
    
     initial begin
         clk = 0;
-        #5;
         forever #1 clk = ~clk;
     end
     
