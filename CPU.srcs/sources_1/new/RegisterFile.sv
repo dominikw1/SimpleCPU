@@ -15,6 +15,11 @@ begin
         internal_data <= data_in;
 end
 
+
+initial begin 
+    internal_data <= 32'b01;
+end
+
 endmodule
 
 
@@ -34,6 +39,7 @@ module RegisterFile16 (
 
 wire [15:0] write_enables;
 wire [15:0][31:0] register_outputs;
+assign write_enables = write_enable ? (1'b1 << index_3) : 16'b0;
 
 genvar i;
 generate

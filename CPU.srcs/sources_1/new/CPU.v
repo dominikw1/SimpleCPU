@@ -21,9 +21,10 @@
 
 
 module CPU(
-    input wire clk
+  
     );
 
+reg clk;
 wire [7:0] reg_index1;
 wire [7:0] reg_index2;
 wire [7:0] reg_index3;
@@ -38,10 +39,24 @@ wire [7:0] alu_select;
 wire [31:0] alu_output;
 wire alu_carry;
 
+
+assign reg_write_data = alu_output;
 ALU alu(alu_select, reg_out_data1, reg_out_data2, alu_output, alu_carry);
 
-wire [31:0] instruction;
+reg [31:0] instruction;
 wire [31:0] immediate;
 Controller controller(
 instruction, alu_select, reg_write_enable, immediate, reg_index1,reg_index2,reg_index3);
+
+
+initial begin
+    instruction <= 32'b0110011;
+end
+
+initial begin
+    clk = 0;
+    forever #1 clk = ~clk;
+end
+    
+
 endmodule
