@@ -40,4 +40,8 @@ wire alu_carry;
 
 ALU alu(alu_select, reg_out_data1, reg_out_data2, alu_output, alu_carry);
 
+wire [31:0] instruction;
+wire [31:0] immediate;
+Controller controller(
+instruction, alu_select, reg_write_enable, immediate, reg_index1,reg_index2,reg_index3);
 endmodule
